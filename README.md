@@ -1,6 +1,6 @@
-# carros
+# Carros
 
-A new Flutter project.
+Um projeto flutter para aprendizado do framework!!
 
 ## Getting Started
 
