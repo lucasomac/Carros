@@ -1,3 +1,5 @@
+import 'package:Carros/widgets/app_button.dart';
+import 'package:Carros/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -32,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
         padding: EdgeInsets.all(16),
         child: ListView(
           children: <Widget>[
-            _text("Login", "Insira seu login",
+            AppText("Login", "Insira seu login",
                 controller: _tLogin,
                 validator: _validateLogin,
                 keyboardType: TextInputType.emailAddress,
@@ -41,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 16,
             ),
-            _text(
+            AppText(
               "Password",
               "Insira seu password",
               controller: _tPassword,
@@ -51,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
               textInputAction: TextInputAction.done,
               focusNode: _focusPassword,
             ),
-            _button("Login", _onClickLogin),
+            AppButon("Login", onPressed: _onClickLogin),
           ],
         ),
       ),
@@ -72,56 +74,6 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       return null;
     }
-  }
-
-  _text(String label,
-      String hint, {
-        bool obscureText = false,
-        TextEditingController controller,
-        FormFieldValidator<String> validator,
-        TextInputType keyboardType,
-        TextInputAction textInputAction,
-        FocusNode focusNode,
-        FocusNode nextFocus,
-      }) {
-    return TextFormField(
-      controller: controller,
-      obscureText: obscureText,
-      validator: validator,
-      keyboardType: keyboardType,
-      textInputAction: textInputAction,
-      focusNode: focusNode,
-      onFieldSubmitted: (String text) {
-        if (nextFocus != null) {
-          FocusScope.of(context).requestFocus(_focusPassword);
-        }
-      },
-      style: TextStyle(color: Colors.black54),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(fontSize: 25, color: Colors.black),
-        hintText: hint,
-        hintStyle: TextStyle(fontSize: 15, color: Colors.black12),
-      ),
-    );
-  }
-
-  _button(String text, Function onPressed) {
-    return Container(
-      height: 46,
-      margin: EdgeInsets.only(top: 8),
-      child: RaisedButton(
-        child: Text(
-          text,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 22,
-          ),
-        ),
-        color: Colors.pinkAccent,
-        onPressed: onPressed,
-      ),
-    );
   }
 
   _onClickLogin() {
