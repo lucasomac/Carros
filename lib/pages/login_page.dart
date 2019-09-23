@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+
   final _tLogin = TextEditingController();
+
   final _tPassword = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
+  final _focusPassword = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +32,12 @@ class LoginPage extends StatelessWidget {
         padding: EdgeInsets.all(16),
         child: ListView(
           children: <Widget>[
-            _text(
-              "Login",
-              "Insira seu login",
-              controller: _tLogin,
-              validator: _validateLogin,
-            ),
+            _text("Login", "Insira seu login",
+                controller: _tLogin,
+                validator: _validateLogin,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                nextFocus: _focusPassword),
             SizedBox(
               height: 16,
             ),
@@ -39,6 +47,9 @@ class LoginPage extends StatelessWidget {
               controller: _tPassword,
               obscureText: true,
               validator: _validatePassword,
+              keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.done,
+              focusNode: _focusPassword,
             ),
             _button("Login", _onClickLogin),
           ],
@@ -48,7 +59,7 @@ class LoginPage extends StatelessWidget {
   }
 
   String _validatePassword(String text) {
-    if (text.isEmpty && text.length < 3) {
+    if (text.isEmpty || text.length < 3) {
       return "Password can't blank and length can't minor 3!";
     } else {
       return null;
@@ -63,14 +74,28 @@ class LoginPage extends StatelessWidget {
     }
   }
 
-  _text(String label, String hint,
-      {bool obscureText = false,
-      TextEditingController controller,
-      FormFieldValidator<String> validator}) {
+  _text(String label,
+      String hint, {
+        bool obscureText = false,
+        TextEditingController controller,
+        FormFieldValidator<String> validator,
+        TextInputType keyboardType,
+        TextInputAction textInputAction,
+        FocusNode focusNode,
+        FocusNode nextFocus,
+      }) {
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
       validator: validator,
+      keyboardType: keyboardType,
+      textInputAction: textInputAction,
+      focusNode: focusNode,
+      onFieldSubmitted: (String text) {
+        if (nextFocus != null) {
+          FocusScope.of(context).requestFocus(_focusPassword);
+        }
+      },
       style: TextStyle(color: Colors.black54),
       decoration: InputDecoration(
         labelText: label,
