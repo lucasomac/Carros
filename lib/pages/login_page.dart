@@ -1,23 +1,14 @@
-import 'package:Carros/widgets/app_button.dart';
-import 'package:Carros/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final _formKey = GlobalKey<FormState>();
-
+class LoginPage extends StatelessWidget {
   final _tLogin = TextEditingController();
+  final _tSenha = TextEditingController();
 
-  final _tPassword = TextEditingController();
-
-  final _focusPassword = FocusNode();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         title: Text("Carros"),
@@ -34,54 +25,85 @@ class _LoginPageState extends State<LoginPage> {
         padding: EdgeInsets.all(16),
         child: ListView(
           children: <Widget>[
-            AppText("Login", "Insira seu login",
-                controller: _tLogin,
-                validator: _validateLogin,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                nextFocus: _focusPassword),
+            _text("Login", "Digite seu login", controller: _tLogin,
+                validator: (String text) {
+                  if (text.isEmpty) {
+                    return "Digite o login";
+                  }
+                  // return null;
+                }),
             SizedBox(
-              height: 16,
+              height: 10,
             ),
-            AppText(
-              "Password",
-              "Insira seu password",
-              controller: _tPassword,
-              obscureText: true,
-              validator: _validatePassword,
-              keyboardType: TextInputType.number,
-              textInputAction: TextInputAction.done,
-              focusNode: _focusPassword,
+            _text("Senha", "Digite a senha",
+                password: true, controller: _tSenha, validator: (String text) {
+                  if (text.isEmpty) {
+                    return "Digite o login";
+                  }
+                  // return null;
+                }),
+            SizedBox(
+              height: 20,
             ),
-            AppButon("Login", onPressed: _onClickLogin),
+            _button("Login", _onClickLogin()),
           ],
         ),
       ),
     );
   }
 
-  String _validatePassword(String text) {
-    if (text.isEmpty || text.length < 3) {
-      return "Password can't blank and length can't minor 3!";
-    } else {
-      return null;
-    }
+  _button(String text, Function onPressed) {
+    return Container(
+      height: 46,
+      child: RaisedButton(
+        color: Colors.amberAccent,
+        child: Text(
+          text,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 22,
+          ),
+        ),
+        onPressed: onPressed,
+      ),
+    );
   }
 
-  String _validateLogin(String text) {
-    if (text.isEmpty) {
-      return "Login can't blank";
-    } else {
-      return null;
-    }
+  _text(String label,
+      String hint, {
+        bool password = false,
+        TextEditingController controller,
+        FormFieldValidator<String> validator,
+      }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: password,
+      validator: validator,
+      style: TextStyle(
+        fontSize: 25,
+        color: Colors.amber,
+      ),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(
+          fontSize: 25,
+          color: Colors.grey,
+        ),
+        hintText: hint,
+        hintStyle: TextStyle(
+          fontSize: 16,
+        ),
+      ),
+    );
   }
 
   _onClickLogin() {
-    if (!_formKey.currentState.validate()) {
+    bool formOk = _formKey.currentState.validate();
+    if (!formOk) {
       return;
     }
     String login = _tLogin.text;
-    String password = _tPassword.text;
-    print("Login: $login, Password: $password");
+    String senha = _tSenha.text;
+    print("Login: $login, Senha: $senha");
   }
 }

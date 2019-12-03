@@ -20,7 +20,7 @@ class AppButon extends StatelessWidget {
             fontSize: 22,
           ),
         ),
-        color: Colors.pinkAccent,
+        color: Colors.amberAccent,
         onPressed: onPressed,
       ),
     );
