@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class AppText extends StatelessWidget {
   String label;
   String hint;
@@ -37,13 +38,23 @@ class AppText extends StatelessWidget {
           FocusScope.of(context).requestFocus(nextFocus);
         }
       },
-      style: TextStyle(color: Colors.black54),
+      style: TextStyle(
+        fontSize: 25,
+        color: Colors.amber,
+      ),
       decoration: InputDecoration(
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
         labelText: label,
-        labelStyle: TextStyle(fontSize: 25, color: Colors.black),
+        labelStyle: TextStyle(
+          fontSize: 25,
+          color: Colors.grey,
+        ),
         hintText: hint,
-        hintStyle: TextStyle(fontSize: 15, color: Colors.black12),
+        hintStyle: TextStyle(
+          fontSize: 16,
+        ),
       ),
     );
   }

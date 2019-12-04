@@ -1,14 +1,33 @@
+import 'package:Carros/pages/login_api.dart';
+import 'package:Carros/pages/usuario.dart';
+import 'package:Carros/utils/nav.dart';
+import 'package:Carros/widgets/AppButton.dart';
+import 'package:Carros/widgets/AppText.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
+import 'home_page.dart';
+
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+
   final _tLogin = TextEditingController();
+
   final _tSenha = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
+  final _focusSenha = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         title: Text("Carros"),
@@ -25,85 +44,67 @@ class LoginPage extends StatelessWidget {
         padding: EdgeInsets.all(16),
         child: ListView(
           children: <Widget>[
-            _text("Login", "Digite seu login", controller: _tLogin,
-                validator: (String text) {
-                  if (text.isEmpty) {
-                    return "Digite o login";
-                  }
-                  // return null;
-                }),
-            SizedBox(
-              height: 10,
-            ),
-            _text("Senha", "Digite a senha",
-                password: true, controller: _tSenha, validator: (String text) {
-                  if (text.isEmpty) {
-                    return "Digite o login";
-                  }
-                  // return null;
-                }),
+            AppText("Login", "Digite o login",
+                controller: _tLogin,
+                validator: _validateLogin,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                nextFocus: _focusSenha),
+            SizedBox(height: 10),
+            AppText("Senha", "Digite a senha",
+                controller: _tSenha,
+                obscureText: true,
+                validator: _validateSenha,
+                keyboardType: TextInputType.number,
+                focusNode: _focusSenha),
             SizedBox(
               height: 20,
             ),
-            _button("Login", _onClickLogin()),
+            AppButon(
+              "Login",
+              onPressed: _onClickLogin,
+            ),
           ],
         ),
       ),
     );
   }
 
-  _button(String text, Function onPressed) {
-    return Container(
-      height: 46,
-      child: RaisedButton(
-        color: Colors.amberAccent,
-        child: Text(
-          text,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 22,
-          ),
-        ),
-        onPressed: onPressed,
-      ),
-    );
-  }
-
-  _text(String label,
-      String hint, {
-        bool password = false,
-        TextEditingController controller,
-        FormFieldValidator<String> validator,
-      }) {
-    return TextFormField(
-      controller: controller,
-      obscureText: password,
-      validator: validator,
-      style: TextStyle(
-        fontSize: 25,
-        color: Colors.amber,
-      ),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(
-          fontSize: 25,
-          color: Colors.grey,
-        ),
-        hintText: hint,
-        hintStyle: TextStyle(
-          fontSize: 16,
-        ),
-      ),
-    );
-  }
-
-  _onClickLogin() {
-    bool formOk = _formKey.currentState.validate();
-    if (!formOk) {
+  void _onClickLogin() async {
+    if (!_formKey.currentState.validate()) {
       return;
     }
     String login = _tLogin.text;
     String senha = _tSenha.text;
+
     print("Login: $login, Senha: $senha");
+    Usuario user = await LoginApi.login(login, senha);
+    if (user != null) {
+      push(context, HomePage());
+    } else {
+      print("Login Incorreto");
+    }
+  }
+
+  String _validateLogin(String text) {
+    if (text.isEmpty) {
+      return "Digite o login";
+    }
+    return null;
+  }
+
+  String _validateSenha(String text) {
+    if (text.isEmpty) {
+      return "Digite a senha";
+    }
+    if (text.length < 3) {
+      return "A senha precisa ter pelo menos 3 números";
+    }
+    return null;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
