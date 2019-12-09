@@ -1,3 +1,4 @@
+import 'package:Carros/drawer_list.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -9,12 +10,14 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
       ),
       body: _body(),
+      drawer: DrawerList(),
     );
   }
 
   _body() {
     return Center(
-      child: Text("Lucas",
+      child: Text(
+        "Lucas",
         style: TextStyle(
           fontSize: 22,
         ),

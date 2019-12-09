@@ -1,5 +1,6 @@
 import 'package:Carros/pages/api_response.dart';
 import 'package:Carros/pages/login_api.dart';
+import 'package:Carros/pages/usuario.dart';
 import 'package:Carros/utils/alert.dart';
 import 'package:Carros/utils/nav.dart';
 import 'package:Carros/widgets/AppButton.dart';
@@ -88,8 +89,9 @@ class _LoginPageState extends State<LoginPage> {
     });
     ApiResponse response = await LoginApi.login(login, senha);
     if (response.ok) {
-//      Usuario user = response.result;
-      push(context, HomePage());
+      Usuario user = response.result;
+      print("$user");
+      push(context, HomePage(), replace: true);
     } else {
       alert(context, response.msg);
     }
