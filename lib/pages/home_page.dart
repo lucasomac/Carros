@@ -14,8 +14,7 @@ class HomePage extends StatelessWidget {
 
   _body() {
     return Center(
-      child: Text(
-        "Lucas",
+      child: Text("Lucas",
         style: TextStyle(
           fontSize: 22,
         ),
