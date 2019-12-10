@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:Carros/pages/usuario.dart';
+import 'package:Carros/pages/login/usuario.dart';
 import 'package:http/http.dart' as http;
 
-import 'api_response.dart';
+import '../api_response.dart';
 
 class LoginApi {
   static Future<ApiResponse<Usuario>> login(String login, String senha) async {

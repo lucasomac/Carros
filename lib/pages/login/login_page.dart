@@ -1,13 +1,13 @@
 import 'package:Carros/pages/api_response.dart';
-import 'package:Carros/pages/login_api.dart';
-import 'package:Carros/pages/usuario.dart';
+import 'package:Carros/pages/login/login_api.dart';
+import 'package:Carros/pages/login/usuario.dart';
 import 'package:Carros/utils/alert.dart';
 import 'package:Carros/utils/nav.dart';
 import 'package:Carros/widgets/AppButton.dart';
 import 'package:Carros/widgets/AppText.dart';
 import 'package:flutter/material.dart';
 
-import 'home_page.dart';
+import '../carro/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
