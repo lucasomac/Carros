@@ -1,6 +1,7 @@
 import 'package:Carros/drawer_list.dart';
 import 'package:Carros/pages/carro/carros_api.dart';
 import 'package:Carros/pages/carro/carros_listview.dart';
+import 'package:Carros/utils/prefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,11 +18,7 @@ class _HomePageState extends State<HomePage>
   void initState() {
     // TODO: implement initState
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-    _tabController.index = 2;
-    _tabController.addListener(() {
-      print("Tab ${_tabController.index}");
-    });
+    _initTabs();
   }
 
   @override
@@ -55,5 +52,14 @@ class _HomePageState extends State<HomePage>
       ),
       drawer: DrawerList(),
     );
+  }
+
+  _initTabs() async {
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.index = await Prefs.getInt("tabIdx");
+    _tabController.addListener(() {
+      print("Tab ${_tabController.index}");
+      Prefs.setInt("tabIdx", _tabController.index);
+    });
   }
 }

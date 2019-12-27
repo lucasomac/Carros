@@ -25,6 +25,7 @@ class LoginApi {
       Map mapResponse = json.decode(response.body);
       if (response.statusCode == 200) {
         final user = Usuario.fromJson(mapResponse);
+        user.save();
         return ApiResponse.ok(user);
       }
       return ApiResponse.error(mapResponse["error"]);
