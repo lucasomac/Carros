@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:Carros/pages/carro/carro_page.dart';
+import 'package:Carros/utils/nav.dart';
 import 'package:flutter/material.dart';
 
 import 'carro.dart';
@@ -14,20 +18,28 @@ class CarrosListView extends StatefulWidget {
 
 class _CarrosListViewState extends State<CarrosListView>
     with AutomaticKeepAliveClientMixin {
+  List<Carro> carros;
+  final _streamController = StreamController<List<Carro>>();
+
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCarros();
+  }
+
+  _loadCarros() async {
+    List<Carro> carros = await CarrosApi.getCarros(widget.tipo);
+    _streamController.add(carros);
+  }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return _body();
-  }
-
-  _body() {
-    Future<List<Carro>> future = CarrosApi.getCarros(widget.tipo);
-    return FutureBuilder(
-      future: future,
+    return StreamBuilder(
+      stream: _streamController.stream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           print(snapshot.error);
@@ -35,7 +47,7 @@ class _CarrosListViewState extends State<CarrosListView>
             child: Text(
               "Não foi possível buscar os carros!!",
               style: TextStyle(
-                color: Colors.red,
+                color: Colors.black,
                 fontSize: 22,
               ),
             ),
@@ -45,10 +57,9 @@ class _CarrosListViewState extends State<CarrosListView>
           return Center(
             child: CircularProgressIndicator(),
           );
-        } else {
-          List<Carro> carros = snapshot.data;
-          return _listView(carros);
         }
+        List<Carro> carros = snapshot.data;
+        return _listView(carros);
       },
     );
   }
@@ -81,7 +92,7 @@ class _CarrosListViewState extends State<CarrosListView>
                     style: TextStyle(fontSize: 25),
                   ),
                   Text(
-                    "descrição",
+                    "Descrição",
                     style: TextStyle(fontSize: 16),
                   ),
                   ButtonBarTheme(
@@ -90,11 +101,8 @@ class _CarrosListViewState extends State<CarrosListView>
                     child: ButtonBar(
                       children: <Widget>[
                         FlatButton(
-                          child: const Text('DETALHES'),
-                          onPressed: () {
-                            /* ... */
-                          },
-                        ),
+                            child: const Text('DETALHES'),
+                            onPressed: () => _onClickCarro(c)),
                         FlatButton(
                           child: const Text('SHARE'),
                           onPressed: () {
@@ -111,5 +119,15 @@ class _CarrosListViewState extends State<CarrosListView>
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _streamController.close();
+  }
+
+  _onClickCarro(Carro c) {
+    push(context, CarroPage(c));
   }
 }
